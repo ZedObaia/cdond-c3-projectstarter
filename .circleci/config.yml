@@ -7,8 +7,8 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:7} \
-             && aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+             && aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
 
 jobs:
@@ -128,11 +128,11 @@ jobs:
             aws ec2 describe-instances \
               --filters "Name=backend-${CIRCLE_WORKFLOW_ID:0:7},Values=running" \
               --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
-              --output text > project/.circleci/ansible/inventory.txt
+              --output text > .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
       - destroy-environment
 
 workflows:
