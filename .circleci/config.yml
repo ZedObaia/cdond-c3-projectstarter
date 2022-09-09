@@ -167,13 +167,14 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip python-pip
-            pip install ansible
+            yum install -y tar gzip python3 python3-pip
+            pip3 install ansible
       - attach_workspace:
           at: .
       - run:
           name: Configure server
           command: |
+            ls -la
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
