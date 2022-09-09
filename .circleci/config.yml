@@ -139,25 +139,25 @@ jobs:
       - destroy-environment
 
   configure-infrastructure:
-  docker:
-    - image: python:3.7-alpine3.11
-  steps:
-    - checkout
-    - add_ssh_keys:
-        fingerprints: ["10:51:73:42:94:f5:77:00:b7:51:ef:ce:ef:96:05:c4"]
-    - attach_workspace:
-        at: .
-    - run:
-        name: Install dependencies
-        command: |
-          apk add --update ansible
-          apk add awscli
-    - run:
-        name: Configure server
-        command: |
-          cd .circleci/ansible
-          ansible-playbook -i inventory.txt configure-server.yml
-    - destroy-environment
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["10:51:73:42:94:f5:77:00:b7:51:ef:ce:ef:96:05:c4"]
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add awscli
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
 
 workflows:
   default:
