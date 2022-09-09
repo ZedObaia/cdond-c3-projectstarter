@@ -149,7 +149,7 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-            python3 -m pip install ansible
+            python -m pip install ansible
       - attach_workspace:
           at: .
       - run:
