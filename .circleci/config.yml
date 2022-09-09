@@ -89,7 +89,7 @@ jobs:
             npm install
             npm run build
       - save_cache:
-          paths: [backend/node_modules]
+          paths: [backend/node_modules, backend/dist]
           key: backend-build
   test-backend:
     docker:
@@ -159,23 +159,27 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["10:51:73:42:94:f5:77:00:b7:51:ef:ce:ef:96:05:c4"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip python3 python3-pip
-            pip3 install ansible
-      - attach_workspace:
-          at: .
+            apk add curl
+            apk add --upgrade bash
+            apk add --upgrade ansible
+            apk add openssh-client
+            pip3 install awscli
       - run:
           name: Configure server
           command: |
             ls -la
-            cd .circleci/ansible
+            pwd
+            cd ~/.circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
 
@@ -190,7 +194,6 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            echo $TYPEORM_HOST
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
