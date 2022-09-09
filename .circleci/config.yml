@@ -81,7 +81,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
@@ -91,14 +91,14 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules, backend/dist]
-          key: backend-build-2
+          key: backend-build
   test-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Test backend
           command: |
@@ -111,7 +111,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Scan backend
           command: |
@@ -120,9 +120,7 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit fix --force
             npm audit --audit-level critical
-      - save_cache:
-          paths: [backend/node_modules, backend/dist]
-          key: backend-build-fixed
+
 
   deploy-infrastructure:
     docker:
@@ -193,7 +191,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-fixed]
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
