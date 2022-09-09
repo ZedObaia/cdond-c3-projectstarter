@@ -184,14 +184,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build, backend/node_modules]
-      - attach_workspace:
-          at: .
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
             cd backend
-            ls -la
+            echo $TYPEORM_HOST
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
