@@ -81,7 +81,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build-1]
       - run:
           name: Back-end build
           command: |
@@ -91,14 +91,14 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules, backend/dist]
-          key: backend-build
+          key: backend-build-1
   test-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build-1]
       - run:
           name: Test backend
           command: |
@@ -111,7 +111,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build-1]
       - run:
           name: Scan backend
           command: |
@@ -190,7 +190,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build-1]
       - run:
           name: Run migrations
           command: |
