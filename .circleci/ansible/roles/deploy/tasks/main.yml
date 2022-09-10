@@ -12,17 +12,6 @@
     dest: /home/ubuntu/
     remote_src: yes
 
-- name: verify artifact
-  become: yes
-  shell: |
-    ls /home/ubuntu/ -la
-  register: result
-
-- name: Print return information from the previous task
-  debug:
-    var: result
-    verbosity: 2
-
 - name: Start app
   become: yes
   shell: |
@@ -30,3 +19,9 @@
     npm install
     pm2 stop default
     pm2 start npm -- start
+  register: result
+
+- name: Print return information from the previous task
+  debug:
+    var: result
+    verbosity: 2
