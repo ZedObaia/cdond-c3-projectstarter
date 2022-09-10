@@ -12,6 +12,12 @@
     dest: /home/ubuntu/
     remote_src: yes
 
+- name: verify artifact
+  become: yes
+  shell: |
+    cd /home/ubuntu/
+    ls -l
+    echo "Artifact is valid"
 - name: Start app
   become: yes
   shell: |
