@@ -211,17 +211,19 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip python-pip
-            pip install ansible
-            yum update -y
-            yum install -y epel-release
-            yum install -y nodejs npm
+            apk add curl
+            apk add --upgrade bash
+            apk add --upgrade ansible
+            apk add openssh-client
+            pip3 install awscli
+            apk add --upgrade nodejs
+            apk add --upgrade npm
       - attach_workspace:
           at: .
       - run:
@@ -249,7 +251,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -257,11 +259,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip python-pip
-            pip install ansible
-            yum update -y
-            yum install -y epel-release
-            yum install -y nodejs npm
+            apk add curl
+            apk add --upgrade bash
+            apk add --upgrade ansible
+            apk add openssh-client
+            pip3 install awscli
+            apk add --upgrade nodejs
+            apk add --upgrade npm
       - attach_workspace:
           at: /project
       - run:
@@ -273,7 +277,6 @@ jobs:
             cd ..
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
-            echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
