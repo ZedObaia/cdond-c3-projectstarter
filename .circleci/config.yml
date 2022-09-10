@@ -225,7 +225,7 @@ jobs:
             apk add --upgrade nodejs
             apk add --upgrade npm
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Get backend url
           command: |
@@ -267,18 +267,22 @@ jobs:
             apk add --upgrade nodejs
             apk add --upgrade npm
       - attach_workspace:
-          at: ./
+          at: ~/
       - run:
           name: Deploy backend
           command: |
             ls -la
             pwd
+            echo "cd into backend ------"
             cd backend
+            echo "npm install ------"
             npm i
+            echo "npm run build -----"
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
