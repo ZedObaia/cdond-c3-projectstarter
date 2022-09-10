@@ -267,10 +267,12 @@ jobs:
             apk add --upgrade nodejs
             apk add --upgrade npm
       - attach_workspace:
-          at: /project
+          at: ./
       - run:
           name: Deploy backend
           command: |
+            ls -la
+            pwd
             cd backend
             npm i
             npm run build
