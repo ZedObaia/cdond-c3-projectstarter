@@ -23,7 +23,7 @@ commands:
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/66nmPsTZ9Wnzp2G6KrHzMx/migration_<< parameters.workflow_id >>)
             echo $SUCCESS
-            if(( $SUCCESS==0 )); 
+            if(( $SUCCESS == 0 )); 
             then
               cd ~/project/backend
               npm install
