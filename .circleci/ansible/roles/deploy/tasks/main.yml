@@ -3,7 +3,7 @@
   become: yes
   copy:
     src: /root/project/artifact.tar.gz
-    dest: /home/ubuntu/
+    dest: /home/ubuntu/artifact.tar.gz
 
 - name: Unarchive artifact
   become: yes
