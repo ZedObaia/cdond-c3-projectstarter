@@ -271,16 +271,12 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            ls -la
-            pwd
-            echo "cd into backend ------"
             cd backend
-            echo "npm install ------"
             npm i
-            echo "npm run build -----"
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
+            ls -l artifact.tar.gz
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
