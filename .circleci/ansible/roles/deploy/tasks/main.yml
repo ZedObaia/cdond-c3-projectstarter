@@ -8,7 +8,7 @@
 - name: Unarchive artifact
   become: yes
   unarchive:
-    src: /home/ubuntu/artifact.tar.gz
+    remote_src: /home/ubuntu/artifact.tar.gz
     dest: /home/ubuntu/
 
 - name: Start app
