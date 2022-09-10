@@ -17,6 +17,7 @@ commands:
         type: string
     steps:
       - run:
+          when: on_fail
           name: Revert migrations
           # Add when this will run
           command: |
@@ -218,6 +219,8 @@ jobs:
           command: |
             yum install -y tar gzip python-pip
             pip install ansible
+            yum update -y
+            yum install -y epel-release
             yum install -y nodejs npm
       - attach_workspace:
           at: .
@@ -256,6 +259,8 @@ jobs:
           command: |
             yum install -y tar gzip python-pip
             pip install ansible
+            yum update -y
+            yum install -y epel-release
             yum install -y nodejs npm
       - attach_workspace:
           at: /project
