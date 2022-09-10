@@ -30,6 +30,16 @@ commands:
               npm run migration:revert
             fi
 
+  get_backend_ip:
+    description: Get the backend ip.
+    steps:
+      - run:
+          name: Get backend ip
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
+              --output text)
 jobs:
   build-frontend:
     docker:
@@ -145,14 +155,11 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-
+      - get_backend_ip
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
-              --output text >> .circleci/ansible/inventory.txt
+            echo $BACKEND_IP >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -226,13 +233,10 @@ jobs:
             apk add --upgrade npm
       - attach_workspace:
           at: ~/
+      - get_backend_ip
       - run:
           name: Get backend url
           command: |
-            export BACKEND_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
-              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
@@ -284,6 +288,47 @@ jobs:
       - destroy-environment
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
+  smoke-test:
+  docker:
+    - image: python:3.7-alpine3.11
+  steps:
+    - checkout
+    - run:
+        name: Install dependencies
+        command: |
+          apk add curl
+          apk add --upgrade bash
+          apk add --upgrade ansible
+          pip3 install awscli
+          apk add --upgrade nodejs
+          apk add --upgrade npm
+    - get_backend_ip
+    - run:
+        name: Backend smoke test.
+        command: |
+          export API_URL="http://${BACKEND_IP}:3030"
+          echo "${API_URL}"
+          if curl "${API_URL}/api/status" | grep "ok"
+          then
+              return 0
+          else
+              return 1
+          fi
+    - run:
+        name: Frontend smoke test.
+        command: |
+          URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+          echo ${URL} 
+          if curl -s ${URL} | grep "Welcome"
+          then
+            return 0
+          else
+            return 1
+          fi
+    - destroy-environment
+    - revert-migrations:
+        workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:
   default:
