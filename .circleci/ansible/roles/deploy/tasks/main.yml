@@ -12,11 +12,6 @@
     dest: /home/ubuntu/
     remote_src: yes
 
-- name: Make sure env vars are set
-  debug:
-    msg: "'{{ lookup('env', 'TYPEORM_HOST') }}' is the DB Host name."
-
-
 - name: Start app
   become: yes
   shell: |

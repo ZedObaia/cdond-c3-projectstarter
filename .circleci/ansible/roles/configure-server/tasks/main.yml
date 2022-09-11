@@ -20,7 +20,3 @@
     global: yes
     production: yes
     state: present
-
-- name: Make sure env vars are set
-  debug:
-    msg: "'{{ lookup('env', 'TYPEORM_HOST') }}' is the DB Host name."
