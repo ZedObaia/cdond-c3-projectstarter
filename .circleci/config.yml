@@ -90,7 +90,7 @@ jobs:
             npm cache clean --force
             npm install
             npm run build
-            cp .env dist/.env
+
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
