@@ -37,7 +37,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build-2]
+          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
@@ -46,14 +46,14 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build-2
+          key: frontend-build
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build-2]
+          keys: [frontend-build]
       - run:
           name: Test front-end
           command: |
@@ -67,7 +67,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build-2]
+          keys: [frontend-build]
       - run:
           name: Scan front-end
           command: |
@@ -82,7 +82,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
@@ -92,14 +92,14 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules, backend/dist]
-          key: backend-build-2
+          key: backend-build
   test-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Test backend
           command: |
@@ -112,7 +112,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Scan backend
           command: |
@@ -191,7 +191,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-2]
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
@@ -224,6 +224,7 @@ jobs:
             pip3 install awscli
             apk add --upgrade nodejs
             apk add --upgrade npm
+            npm install typescript -g
       - attach_workspace:
           at: ~/
       - run:
@@ -253,16 +254,16 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
         environment:
-          NODE_ENV: "production"
-          VERSION: "1"
-          ENVIRONMENT: "production"
-          TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-          TYPEORM_HOST: $TYPEORM_HOST
-          TYPEORM_USERNAME: $TYPEORM_USERNAME
-          TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-          TYPEORM_DATABASE: $TYPEORM_DATABASE
-          TYPEORM_PORT: $TYPEORM_PORT
-          TYPEORM_ENTITIES: $TYPEORM_ENTITIES 
+          # NODE_ENV: "production"
+          # VERSION: "1"
+          # ENVIRONMENT: "production"
+          # TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+          # TYPEORM_HOST: $TYPEORM_HOST
+          # TYPEORM_USERNAME: $TYPEORM_USERNAME
+          # TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+          # TYPEORM_DATABASE: $TYPEORM_DATABASE
+          # TYPEORM_PORT: $TYPEORM_PORT
+          # TYPEORM_ENTITIES: $TYPEORM_ENTITIES 
     steps:
       - checkout
       - add_ssh_keys:
@@ -277,6 +278,8 @@ jobs:
             pip3 install awscli
             apk add --upgrade nodejs
             apk add --upgrade npm
+            npm install typescript -g
+
       - attach_workspace:
           at: ~/
       - run:
