@@ -6,14 +6,14 @@
     dest: /home/ubuntu/artifact.tar.gz
 
 - name: Unarchive artifact
-  become: yes
+  become: no
   unarchive:
     src: /home/ubuntu/artifact.tar.gz
     dest: /home/ubuntu/
     remote_src: yes
 
 - name: Start app
-  become: yes
+  become: no
   shell: |
     cd /home/ubuntu
     npm i
