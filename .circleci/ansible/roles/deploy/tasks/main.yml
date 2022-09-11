@@ -12,11 +12,16 @@
     dest: /home/ubuntu/
     remote_src: yes
 
+- name: Make sure env vars are set
+  debug:
+    msg: "'{{ lookup('env', 'TYPEORM_HOST') }}' is the DB Host name."
+
+
 - name: Start app
-  become: no
+  become: yes
   shell: |
     cd /home/ubuntu
-    npm i
+    npm install
     pm2 stop default
     pm2 start npm -- start
   register: result
@@ -24,4 +29,3 @@
 - name: Print return information from the previous task
   debug:
     var: result
-    verbosity: 2
