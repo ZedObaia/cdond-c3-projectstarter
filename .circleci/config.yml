@@ -369,13 +369,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Get old stack workflow id
-          command: |
-            export OldWorkflowID=$(curl --insecure https://kvdb.io/66nmPsTZ9Wnzp2G6KrHzMx/OldWorkflowID)
-
-      - run:
           name: Remove old stacks and files
           command: |
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/66nmPsTZ9Wnzp2G6KrHzMx/OldWorkflowID)
             echo OldWorkflowID: "${OldWorkflowID}"
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
