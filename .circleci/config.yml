@@ -385,16 +385,8 @@ workflows:
   version: 2
   default:
     jobs:
-      - build-frontend:
-          filters:
-            branches:
-              only:
-                - master
-      - build-backend:
-          filters:
-            branches:
-              only:
-                - master
+      - build-frontend
+      - build-backend
       - test-frontend:
           requires:
             - "build-frontend"
@@ -408,6 +400,10 @@ workflows:
           requires:
             - "build-backend"
       - deploy-infrastructure:
+          filters:
+            branches:
+              only:
+                - master
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
