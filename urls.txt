@@ -1,0 +1,5 @@
+URL01: https://github.com/ZedObaia/cdond-c3-projectstarter
+URL02: https://udapeople-a8c5dda.s3.amazonaws.com/index.html
+URL03: https://d5plieg8kyqzu.cloudfront.net/
+URL04: http://3.87.10.199:3030/api/status
+URL05: http://ec2-18-212-171-209.compute-1.amazonaws.com:9090/graph
